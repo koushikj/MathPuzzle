@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/goButton"
+        android:layout_width="190dp"
+        android:layout_height="178dp"
+        android:background="#6CFB4C"
+        android:onClick="play"
+        android:text="Go!"
+        android:textSize="56sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/topParent"
+        android:layout_width="401dp"
+        android:layout_height="109dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10px"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/bottomParent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/counter"
+            android:layout_width="34dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="#FFEB3B"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/question"
+            android:layout_width="128dp"
+            android:layout_height="90dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="36sp"
+            tools:text="Questions" />
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="#FF9800"
+            android:gravity="center"
+            android:text="0/0"
+            android:textSize="36sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomParent"
+        android:layout_width="383dp"
+        android:layout_height="427dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topParent">
+
+        <LinearLayout
+            android:id="@+id/bottomChild1"
+            android:layout_width="match_parent"
+            android:layout_height="162dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/option1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="#4F6AF3"
+                android:gravity="center"
+                android:onClick="onOptionClick"
+                android:text="Option1"
+                android:tag="1"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/option2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="#4CAF50"
+                android:gravity="center"
+                android:onClick="onOptionClick"
+                android:tag="2"
+                android:text="Option2"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottomChild2"
+            android:layout_width="match_parent"
+            android:layout_height="162dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/option3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="#9C27B0"
+                android:gravity="center"
+                android:onClick="onOptionClick"
+                android:text="Option3"
+                android:tag="3"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/option4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="#03A9F4"
+                android:gravity="center"
+                android:onClick="onOptionClick"
+                android:text="Option4"
+                android:tag="4"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/answer"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:gravity="center"
+            android:text="Your Score :"
+            android:textSize="30sp"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/playAgain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="playAgain"
+            android:text="Play Again!"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
