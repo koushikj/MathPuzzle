@@ -2,6 +2,9 @@ package com.example.mathpuzzle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -9,18 +12,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     LinearLayout topParent;
     LinearLayout bottomParent;
+    Button scoreHistory;
     Button playAgain;
     Button goButton;
     Button option1;
@@ -37,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Map<Integer, String> questions = new HashMap<>();
     Map<Integer, String> answerKey = new HashMap<>();
     Map<Integer, List<String>> options = new HashMap<>();
+    long gameTime = 1000*5;
 
     boolean gameOver=false;
 
@@ -44,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        scoreHistory = findViewById(R.id.scoreHistory);
         topParent = findViewById(R.id.topParent);
         bottomParent = findViewById(R.id.bottomParent);
         playAgain = findViewById(R.id.playAgain);
@@ -57,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
 
+        scoreHistory.setVisibility(View.INVISIBLE);
         topParent.setVisibility(View.INVISIBLE);
         bottomParent.setVisibility(View.INVISIBLE);
         answer.setVisibility(View.INVISIBLE);
-
 
         goButton.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -71,9 +83,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
+
+    private void updateScore() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("com.example.mathpuzzle", Context.MODE_PRIVATE);
+        ArrayList<String> newArrayList=null;
+        try {
+            newArrayList = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("scores",ObjectSerializer.serialize(new ArrayList<String>())));
+//            newArrayList.clear();
+//            newArrayList.add("Score  -   Date");
+            newArrayList.add(getScoreAndTime());
+            sharedPreferences.edit().putString("scores",ObjectSerializer.serialize(newArrayList)).apply();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //sharedPreferences.edit().putString("scores","test111").apply();
+
+        Log.i("test", String.valueOf(newArrayList.size()));
+        Log.i("test1", Arrays.toString(newArrayList.toArray()));
+    }
+
 
     private void setRandomQuestions() {
         Random random = new Random();
@@ -131,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         playAgain.setVisibility(View.INVISIBLE);
         goButton.setVisibility(View.INVISIBLE);
         answer.setVisibility(View.INVISIBLE);
+        scoreHistory.setVisibility(View.INVISIBLE);
 
         topParent.setVisibility(View.VISIBLE);
         bottomParent.setVisibility(View.VISIBLE);
@@ -141,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-        CountDownTimer countDownTimer = new CountDownTimer(5000+100,1000) {
+        CountDownTimer countDownTimer = new CountDownTimer(gameTime+100,1000) {
             @Override
             public void onTick(long l) {
                 counter.setText(String.valueOf(l/1000));
@@ -149,16 +179,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                //onFinish();
                 gameOver=true;
+                scoreHistory.setVisibility(View.VISIBLE);
                 playAgain.setVisibility(View.VISIBLE);
                 answer.setVisibility(View.VISIBLE);
                 goButton.setText("Times Up!");
                 goButton.setVisibility(View.VISIBLE);
                 answer.setText("Your Score :"+String.valueOf(userScore)+"/"+String.valueOf(totalNoOfQuestions));
+                updateScore();
             }
         }.start();
     }
 
+    private void onFinish(){
+        gameOver=true;
+        scoreHistory.setVisibility(View.VISIBLE);
+        playAgain.setVisibility(View.VISIBLE);
+        answer.setVisibility(View.VISIBLE);
+        goButton.setText("Times Up!");
+        goButton.setVisibility(View.VISIBLE);
+        answer.setText("Your Score :"+String.valueOf(userScore)+"/"+String.valueOf(totalNoOfQuestions));
+        updateScore();
+    }
     public void playAgain(View view) {
         Log.i("selected","play again");
         play(null);
@@ -175,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
             option4.setText(stringList.get(3));
             score.setText(String.valueOf(userScore) + "/" + String.valueOf(questionCount));
             questionCount++;
+        }else if(questionCount==totalNoOfQuestions){
+            onFinish();
         }
     }
 
@@ -211,6 +256,9 @@ public class MainActivity extends AppCompatActivity {
         Log.i("user Input:", userInput);
         if(userInput.equals(correctAnswer)){
             userScore++;
+            Toast.makeText(getApplicationContext(),"Correct!",Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(),"Incorrect!",Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -226,4 +274,25 @@ public class MainActivity extends AppCompatActivity {
         moveToNextQuestion();
 
     }
+
+    public void scoreHistory(View view) {
+        getScoreAndTime();
+        Date c = Calendar.getInstance().getTime();
+        Log.i("","Current time => " + c);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss.SSS", Locale.getDefault());
+        String formattedDate = df.format(c);
+
+        Intent intent = new Intent(getApplicationContext(),ScoreHistoryActivity.class);
+        intent.putExtra("score",getScoreAndTime());
+        startActivity(intent);
+    }
+
+    private String getScoreAndTime() {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.getDefault());
+        String formattedDate = df.format(c);
+        return String.valueOf(userScore)+"/"+String.valueOf(totalNoOfQuestions)+"  -  "+formattedDate;
+    }
+
 }
