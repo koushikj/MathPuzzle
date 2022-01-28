@@ -276,13 +276,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scoreHistory(View view) {
-        getScoreAndTime();
-        Date c = Calendar.getInstance().getTime();
-        Log.i("","Current time => " + c);
-
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss.SSS", Locale.getDefault());
-        String formattedDate = df.format(c);
-
         Intent intent = new Intent(getApplicationContext(),ScoreHistoryActivity.class);
         intent.putExtra("score",getScoreAndTime());
         startActivity(intent);
