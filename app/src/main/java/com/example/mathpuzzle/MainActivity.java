@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Map<Integer, String> questions = new HashMap<>();
     Map<Integer, String> answerKey = new HashMap<>();
     Map<Integer, List<String>> options = new HashMap<>();
-    long gameTime = 1000*5;
+    long gameTime = 1000*10;
 
     boolean gameOver=false;
 
